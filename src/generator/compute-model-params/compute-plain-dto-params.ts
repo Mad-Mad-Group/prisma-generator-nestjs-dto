@@ -1,10 +1,11 @@
-import slash from 'slash';
 import path from 'node:path';
+import slash from 'slash';
 import {
   DTO_API_HIDDEN,
-  DTO_OVERRIDE_API_PROPERTY_TYPE,
   DTO_CAST_TYPE,
   DTO_ENTITY_HIDDEN,
+  DTO_EXCLUDE,
+  DTO_OVERRIDE_API_PROPERTY_TYPE,
   DTO_OVERRIDE_TYPE,
   DTO_RELATION_INCLUDE_ID,
 } from '../annotations';
@@ -19,18 +20,18 @@ import {
 } from '../helpers';
 
 import type { DMMF } from '@prisma/generator-helper';
-import type { TemplateHelpers } from '../template-helpers';
-import type {
-  Model,
-  ImportStatementParams,
-  ParsedField,
-  PlainDtoParams,
-  IDecorators,
-} from '../types';
 import {
   makeImportsFromNestjsSwagger,
   parseApiProperty,
 } from '../api-decorator';
+import type { TemplateHelpers } from '../template-helpers';
+import type {
+  IDecorators,
+  ImportStatementParams,
+  Model,
+  ParsedField,
+  PlainDtoParams,
+} from '../types';
 
 interface ComputePlainDtoParamsParam {
   model: Model;
@@ -57,6 +58,8 @@ export const computePlainDtoParams = ({
     const decorators: IDecorators = {};
 
     if (isAnnotatedWith(field, DTO_ENTITY_HIDDEN)) return result;
+
+    field.isExclude = isAnnotatedWith(field, DTO_EXCLUDE);
 
     if (isRelation(field)) return result;
     if (

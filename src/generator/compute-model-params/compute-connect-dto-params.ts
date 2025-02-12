@@ -1,6 +1,15 @@
-import slash from 'slash';
-import path from 'node:path';
 import type { DMMF } from '@prisma/generator-helper';
+import path from 'node:path';
+import slash from 'slash';
+import { DTO_CONNECT_HIDDEN } from '../annotations';
+import {
+  makeImportsFromNestjsSwagger,
+  parseApiProperty,
+} from '../api-decorator';
+import {
+  makeImportsFromClassValidator,
+  parseClassValidators,
+} from '../class-validator';
 import { isAnnotatedWith, isId, isUnique } from '../field-classifiers';
 import {
   concatIntoArray,
@@ -12,6 +21,7 @@ import {
   uniq,
   zipImportStatementParams,
 } from '../helpers';
+import { TemplateHelpers } from '../template-helpers';
 import type {
   ConnectDtoParams,
   IClassValidator,
@@ -19,16 +29,6 @@ import type {
   ImportStatementParams,
   Model,
 } from '../types';
-import { TemplateHelpers } from '../template-helpers';
-import {
-  makeImportsFromNestjsSwagger,
-  parseApiProperty,
-} from '../api-decorator';
-import {
-  makeImportsFromClassValidator,
-  parseClassValidators,
-} from '../class-validator';
-import { DTO_CONNECT_HIDDEN } from '../annotations';
 
 interface ComputeConnectDtoParamsParam {
   model: Model;

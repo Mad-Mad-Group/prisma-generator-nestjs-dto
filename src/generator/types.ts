@@ -29,6 +29,7 @@ export interface ParsedField {
   relationFromFields?: string[];
   relationToFields?: string[];
   pureType?: boolean;
+  isExclude?: boolean;
 }
 
 export interface ExtraModel {

@@ -2,9 +2,10 @@ import path from 'node:path';
 import slash from 'slash';
 import {
   DTO_API_HIDDEN,
-  DTO_OVERRIDE_API_PROPERTY_TYPE,
   DTO_CAST_TYPE,
   DTO_ENTITY_HIDDEN,
+  DTO_EXCLUDE,
+  DTO_OVERRIDE_API_PROPERTY_TYPE,
   DTO_OVERRIDE_TYPE,
   DTO_RELATION_REQUIRED,
 } from '../annotations';
@@ -24,18 +25,18 @@ import {
 } from '../helpers';
 
 import type { DMMF } from '@prisma/generator-helper';
-import type {
-  Model,
-  EntityParams,
-  ImportStatementParams,
-  ParsedField,
-  IDecorators,
-} from '../types';
-import type { TemplateHelpers } from '../template-helpers';
 import {
   makeImportsFromNestjsSwagger,
   parseApiProperty,
 } from '../api-decorator';
+import type { TemplateHelpers } from '../template-helpers';
+import type {
+  EntityParams,
+  IDecorators,
+  ImportStatementParams,
+  Model,
+  ParsedField,
+} from '../types';
 
 interface ComputeEntityParamsParam {
   model: Model;
@@ -62,6 +63,8 @@ export const computeEntityParams = ({
     const decorators: IDecorators = {};
 
     if (isAnnotatedWith(field, DTO_ENTITY_HIDDEN)) return result;
+
+    field.isExclude = isAnnotatedWith(field, DTO_EXCLUDE);
 
     if (isType(field)) {
       // don't try to import the class we're preparing params for

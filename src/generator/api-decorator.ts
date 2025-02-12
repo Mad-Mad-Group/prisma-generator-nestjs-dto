@@ -1,7 +1,7 @@
 import { DMMF } from '@prisma/generator-helper';
-import { IApiProperty, ImportStatementParams, ParsedField } from './types';
 import { DTO_OVERRIDE_API_PROPERTY_TYPE } from './annotations';
 import { isAnnotatedWith } from './field-classifiers';
+import { IApiProperty, ImportStatementParams, ParsedField } from './types';
 
 const ApiProps = [
   'description',
@@ -227,7 +227,10 @@ export function makeImportsFromNestjsSwagger(
     if (hasApiHideProperty) destruct.push('ApiHideProperty');
     if (hasApiProperty) destruct.push('ApiProperty');
 
-    return [{ from: '@nestjs/swagger', destruct }];
+    return [
+      { from: 'class-transformer', destruct: ['Expose'] },
+      { from: '@nestjs/swagger', destruct },
+    ];
   }
 
   return [];

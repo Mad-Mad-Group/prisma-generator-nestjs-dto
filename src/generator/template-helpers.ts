@@ -1,13 +1,13 @@
 import { DMMF } from '@prisma/generator-helper';
-import { ImportStatementParams, ParsedField } from './types';
-import { decorateApiProperty } from './api-decorator';
-import { decorateClassValidators } from './class-validator';
-import { isAnnotatedWith, isType } from './field-classifiers';
 import {
   DTO_CAST_TYPE,
   DTO_OVERRIDE_TYPE,
   DTO_TYPE_FULL_UPDATE,
 } from './annotations';
+import { decorateApiProperty } from './api-decorator';
+import { decorateClassValidators } from './class-validator';
+import { isAnnotatedWith, isType } from './field-classifiers';
+import { ImportStatementParams, ParsedField } from './types';
 
 const PrismaScalarToTypeScript: Record<string, string> = {
   String: 'string',
@@ -254,7 +254,7 @@ export const makeHelpers = ({
     )}`;
 
   const fieldToEntityProp = (field: ParsedField) =>
-    `${decorateApiProperty(field)}${field.name}${unless(
+    `${unless(field.isExclude, '@Expose()\n')}${decorateApiProperty(field)}${field.name}${unless(
       field.isRequired,
       '?',
       when(definiteAssignmentAssertion, '!'),
